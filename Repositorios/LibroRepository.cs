@@ -49,4 +49,20 @@ public class LibroRepository : ILibroRepository
         ADLibros.GuardarNuevosLibros(_libros);
         return true;
     }
+    public bool AsignarPrestamo(int idLibro)
+    {
+        var libroPActualizar = ObtenerLibrosId(idLibro);
+        if(libroPActualizar == null) return false;
+        libroPActualizar.disponible = false;
+        ADLibros.GuardarNuevosLibros(_libros);
+        return true;
+    }
+    public bool DevolverLibro(int idLibro)
+    {
+        var libroPActualizar = ObtenerLibrosId(idLibro);
+        if(libroPActualizar == null || libroPActualizar.disponible == true) return false;
+        libroPActualizar.disponible = true;
+        ADLibros.GuardarNuevosLibros(_libros);
+        return true;
+    }
 }

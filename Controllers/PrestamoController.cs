@@ -7,9 +7,13 @@ namespace GestorBibliotecaExpress;
 public class PrestamoController : ControllerBase
 {
     private readonly PrestamoRepository prestamorepo;
+    private readonly LibroRepository libroRepo;
+    private readonly BibliotecaService reglasPrestamos;
     public PrestamoController()
     {
         prestamorepo = new PrestamoRepository();
+        libroRepo = new LibroRepository();
+        reglasPrestamos = new BibliotecaService(prestamorepo, libroRepo);
     }
     [HttpGet("Prestamos")]
     public IActionResult GetPrestamos()
@@ -24,9 +28,9 @@ public class PrestamoController : ControllerBase
         return NoContent();
     }
     [HttpPost("AgregarPrestamo")]
-    public IActionResult AgregarPrestamo([FromBody]Prestamo nuevoLibro)
+    public IActionResult AgregarPrestamo([FromBody]Prestamo nuevoPrestamo, int idLibro)
     {
-        if(prestamorepo.AgregarUnPrestamo(nuevoLibro)) return Created("libro creado", nuevoLibro);
+        if(reglasPrestamos.CrearPrestamo(idLibro, nuevoPrestamo)) return Created("libro creado", nuevoPrestamo);
         return BadRequest();
     }
     [HttpPut("Actualizar")]
